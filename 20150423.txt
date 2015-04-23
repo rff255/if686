@@ -1,0 +1,337 @@
+-- ############# ########### #############
+-- ############# Trabalho 09 #############
+-- ############# ########### #############
+-- Esse arquivo esta compilavel.
+
+-- ############## 
+-- # Questao 01 # 
+-- ############## 
+
+-- Como os exercicios da sala foram liberados de prazos, as resolucoes
+-- estavam desorganizadas em lugares e commits diferentes, entao eu coloquei
+-- todas aqui (mencionando no inicio de cada slide as que eu nao fiz),
+-- mesmo ja tendo feito muitas. Imagino que ficará mais organizado.
+
+-- ############# SLIDE 01
+-- !!! Faltam as 3 ultimas
+
+-- ## Vendas
+vendas :: Int -> Int
+vendas x
+ | (x == 1) = 2
+ | (x == 2) = 2
+ | (x == 3) = 2
+ | otherwise = 5
+
+testEqual :: Int -> Int -> Bool
+testEqual a b = (a == b)
+
+sumIfEqual :: Int -> Int -> Int -> Int
+sumIfEqual a b x
+ | (testEqual a b) = x + 1
+ | otherwise = x
+ 
+findVendas :: Int->Int->Int->Int
+findVendas s n cont 
+ | n == 0 = sumIfEqual s (vendas n) cont
+ | otherwise = (findVendas (s) (n-1) (cont)) + (sumIfEqual (s) (vendas(n)) (0))
+ 
+ 
+-- ##Double
+double :: [Int] -> [Int]
+double list
+ | (list == []) = []
+ | otherwise  = [((head list) + (head list))] ++ double (tail list)
+
+-- ##Member
+member :: [Int] -> Int -> Bool
+member list num
+ | (list == [])       = False
+ | (head list) == num = True
+ | otherwise          = (head list) == num || member (tail list) (num)
+ 
+-- ##Digits
+digits :: String -> String
+digits str
+ | (str == []) = []
+ | fromEnum(head str) > 48 && fromEnum(head str) < 58 = [head str] ++ digits (tail str)
+ | otherwise = digits (tail str)
+ 
+-- ##SumPairs
+sumPairs :: [Int] -> [Int] -> [Int]
+sumPairs list1 list2 
+ | list1 == [] || list2 == [] = []
+ | otherwise = [(head list1) + (head list2)] ++ sumPairs (tail list1) (tail list2)
+ 
+ 
+ 
+-- ############# SLIDE 02
+-- !! tudo feito
+-- ##MenorMaior
+menor :: Int->Int->Int
+menor a b
+ | a < b = a
+ | otherwise = b
+
+maior :: Int->Int->Int
+maior a b
+ | a > b = a
+ | otherwise = b
+
+menorMaior :: Int->Int->Int->(Int,Int)
+menorMaior a b c = (min, max)
+ where
+ min = menor(menor a b) (c)
+ max = maior(maior a b) (c)
+
+-- ##OrdenaTripla
+ordenaTripla :: (Int, Int, Int) -> (Int, Int, Int)
+ordenaTripla (a, b, c) = (x, y, z)
+ where 
+ x = menor (menor a b) (c)
+ z = maior (maior a b) (c)
+ y = (a + b + c) - x - z
+
+-- ## PontoY
+type Ponto = (Float, Float)
+type Reta = (Ponto, Ponto)
+
+getFst :: Ponto -> Float
+getFst (a, b) = a
+
+getSnd :: Ponto -> Float
+getSnd (a, b) = b
+
+pontoY :: Float -> Reta -> Float
+pontoY x (p1, p2) = (getSnd p1) + ((x - getFst p1)*(getSnd p2 - getSnd p1)/(getFst p2 - getFst p1))
+-- y = p1.y + ((x - p1.x)*(p2.y - p1.y)/(p2.x - p1.x))
+
+-- ## Membro
+type Pessoa = String
+type Livro = String
+type BancoDados = [(Pessoa,Livro)]
+
+membro :: [Int] -> Int -> Bool
+membro lista n = if (filtered == []) then False else True
+    where 
+    filtered = [elem | elem <- lista, (elem == n)]
+    
+-- ## Livros
+livros :: BancoDados -> Pessoa -> [Livro]
+livros bd pessoa = [(snd elem) | elem <- bd, (fst elem == pessoa)]
+
+-- ## Emprestimos
+emprestimos :: BancoDados -> Livro -> [Pessoa]
+emprestimos bd livro = [(fst elem) | elem <- bd, (snd elem == livro)]
+
+-- ## Emprestado
+emprestado :: BancoDados -> Livro -> Bool
+emprestado bd livro = if (filtered == []) then False else True
+    where 
+    filtered = [elem | elem <- bd, (snd elem == livro)]
+
+-- ## QtdEmprestimos
+qtdEmprestimos :: BancoDados -> Pessoa -> Int
+qtdEmprestimos bd pessoa = length filtered
+    where 
+    filtered = [elem | elem <- bd, (fst elem == pessoa)]
+
+-- ## Devolver
+devolver :: BancoDados -> Pessoa -> Livro -> BancoDados
+devolver bd pessoa livro = [elem | elem <- bd, (fst elem /= pessoa) || (snd elem /= livro)]
+
+-- ## QuckSort
+quickSort :: [Int] -> [Int]
+quickSort [] = []
+quickSort (a:[]) = [a]
+quickSort lista = (quickSort menores) ++ [pivot] ++ (quickSort maiores)
+    where
+    menores = [elem | elem <- lista, elem < pivot]
+    maiores = [elem | elem <- lista, elem > pivot]
+    pivot = head lista
+    
+-- ############# SLIDE 03
+-- !! So faltou a ultima
+
+-- ## Take
+take1 :: [t] -> Int -> [t]
+take1 lista n = 
+    if ((length lista) <= n) 
+    then lista 
+    else (take1 (init lista) n)
+
+-- ## Drop
+drop1 :: [t] -> Int -> [t]
+drop1 [] _ = []
+drop1 lista n = 
+    if (n == 0) 
+    then lista 
+    else drop1 (tail lista) (n-1)
+    
+-- ## TakeWhile
+takeWhile1 :: (t -> Bool) -> [t] -> [t]
+takeWhile1 pred lista = 
+    if (pred current)
+    then [current] ++ takeWhile pred (tail lista)
+    else []
+    
+    where current = head lista
+
+-- ## DropWhile
+dropWhile1 :: (t -> Bool) -> [t] -> [t]
+dropWhile1 _ [] = []
+dropWhile1 pred lista = 
+    if (pred current)
+    then dropWhile1 pred (init lista) ++ [current]
+    else []
+    
+    where current = last lista
+
+-- ## Ordenacao
+ord :: (Ord t) => [t] -> [t]
+ord [] = []
+ord (a:[]) = [a]
+ord lista = (ord menores) ++ [pivot] ++ (ord maiores)
+    where
+    menores = [elem | elem <- lista, elem < pivot]
+    maiores = [elem | elem <- lista, elem > pivot]
+    pivot = head lista
+
+-- ############# SLIDE 04
+-- !! So faltou a penultima (BFS)
+
+-- ## Area
+data Shape = Circle Float | Rectangle Float Float
+
+area :: Shape -> Float
+area(Circle r) = 3.1415*(r*r)
+area(Rectangle l1 l2) = l1*l2
+
+-- ## EhFimDeSemana Verifica se eh fim de semana
+data Dias = Segunda Int [String] | Terca Int [String] | Quarta Int [String] | Quinta  Int [String] | Sexta Int [String] | Sabado | Domingo 
+
+ehFimDeSemana :: Dias -> Bool
+ehFimDeSemana Sabado = True
+ehFimDeSemana Domingo = True
+ehFimDeSemana _ = False
+
+-- ## TemAulaDePLC Verifica se tem aula de PLC no dia passado
+temPLC :: [String] -> Bool
+temPLC [] = False
+temPLC (a:as)
+ | (a == "PLC") = True
+ | otherwise    = temPLC as
+
+temAulaDePLC :: Dias -> Bool
+temAulaDePLC Sabado = False
+temAulaDePLC Domingo = False
+temAulaDePLC (Segunda h aulas) = temPLC aulas
+temAulaDePLC (Terca h aulas) = temPLC aulas
+temAulaDePLC (Quarta h aulas) = temPLC aulas
+temAulaDePLC (Quinta h aulas) = temPLC aulas
+temAulaDePLC (Sexta h aulas) = temPLC aulas
+
+-- Modificar o tipo tree para ser comparavel e transformavel em string
+data Tree t = NilT | Node t (Tree t) (Tree t) deriving(Eq, Show)
+
+-- ## ShowExpr  Definicao do conjunto de funcoes pedidas
+data Expr = Lit Int | Add Expr Expr | Sub Expr Expr
+
+showExpr :: Expr -> String
+showExpr (Lit n) = show n
+showExpr (Add expr1 expr2) = "(" ++ (showExpr expr1) ++ "+" ++ (showExpr expr2) ++ ")" 
+showExpr (Sub expr1 expr2) = "(" ++ (showExpr expr1) ++ "-" ++ (showExpr expr2) ++ ")" 
+
+-- ## ToList 
+data List t = NilL | Cons t (List t) deriving(Show)
+
+toList :: (List t) -> [t]
+toList NilL = []
+toList (Cons curr resto) = [curr] ++ toList resto
+
+-- ## FromList
+fromList :: [t] -> List t
+fromList [] = NilL
+fromList (curr:resto) = Cons (curr) (fromList resto)
+
+-- ## Depth
+depth :: (Tree t) -> Int
+depth NilT = -1
+depth (Node value lft rgt) = 1 + max (depth lft) (depth rgt)
+-- arvore de testes:(Node 5 (Node 7 (Node 15 NilT (Node 6 NilT NilT)) (Node 2 NilT NilT)) (Node 10 NilT NilT))
+
+-- ## Collapse
+collapse :: Tree t -> [t]
+collapse NilT = []
+collapse (Node value lft rgt) = [value] ++ collapse lft ++ collapse rgt
+
+-- ## BFS !! IMCOMPLETA
+-- bfs :: Tree t -> t -> bool
+-- bfs NilT _ = False
+-- bfs (Node curr lft rgt) value = if (curr == value) then True else 
+
+-- ## MapTree
+mapTree :: (t -> u) -> Tree t -> Tree u
+mapTree func NilT = NilT
+mapTree func (Node value lft rgt) = (Node (func value) (mapTree func lft) (mapTree func rgt))
+
+-- ############# SLIDE 05
+-- !! so fiz a primeira
+
+-- ## MapPow2
+pow2 :: Int -> Int
+pow2 a = a*a
+
+mapPow2 :: [Int] -> [Int]
+mapPow2 lista = map pow2 lista
+
+-- ############# SLIDE 06
+-- !! ainda nem comecei
+
+-- ############## 
+-- # Questao 02 # AINDA INACABADA
+-- ############## 
+
+-- type Vertex t = t
+-- type Edge t = (Vertex t, Vertex t, Int) -- Vértices adjacentes + Peso da aresta
+
+-- type Node t = (Vertex t, Int) -- Vértice + Distância até a origem
+-- type Pair t = (Vertex t, Vertex t) -- Aresta sem pesos
+
+-- data Graph t = Graph [Vertex t] [Edge t] deriving (Eq, Ord, Show)
+
+-- getFirst :: Edge t -> Vertex t
+-- getFirst (u, _, _) = u
+
+-- getSecond :: Edge t -> Vertex t
+-- getSecond (_, v, _) = v
+
+-- getThird :: Edge t -> Int
+-- getThird (_, _, w) = w
+
+-- refresh :: (Eq t) => Vertex t -> [Edge t] -> [Node t] -> [Pair t] -> ([Node t], [Pair t])
+-- refresh 
+
+-- extractPath :: (Eq t) => Vertex t -> Vertex t -> [Pair t] -> [Pair t] -> [Pair t]
+-- extractPath src target incompletePath realPath
+	-- | target == src = realPath
+	-- | otherwise = extractPath src parent incompletePath ((parent, target):realPath)
+		-- where
+			-- auxList = [x | x <- incompletePath, (snd x) == target]
+			-- parent = fst (head auxList)
+
+-- aux :: (Eq t) => Graph t -> Vertex t -> Vertex t -> [Node t] -> [Pair t] -> [Pair t]
+-- aux (Graph vertices edges) src target minQueue prev
+	-- | minQueue == [] = extractPath src target prev []
+	-- | 
+
+-- dijkstra :: (Eq t) => Graph t -> Vertex t -> Vertex t -> [Pair t]
+-- dijkstra (Graph vertices edges) src target = aux (Graph vertices edges) src target queue []
+	-- where
+		-- maxDist = foldr ((+).(getThird)) 0 edges
+		-- queue = (src, 0):[(x, maxDist) | x <- vertices, not(x == src)]
+
+-- geraFuncaoMenorCaminho :: (Eq t) => Graph t -> (Vertex t -> Vertex t -> [Pair t])
+-- geraFuncaoMenorCaminho graph = findShortestPath
+	-- where
+		-- findShortestPath src target = dijkstra graph src target
